@@ -1,0 +1,42 @@
+
+
+______________________REGRAS______________________
+
+* Início do Jogo e Komi: O jogador com as pedras pretas começa o jogo.
+  Como compensação por jogar em segundo lugar, é adicionado um número de
+  pontos à pontuação final do jogador com as pedras brancas, conhecido
+  como Komi. Geralmente, o valor do Komi varia entre 5 e 7 pontos.
+
+* Captura de Pedras: Uma pedra é capturada quando não tem mais liberdades,
+  ou seja, quando não apresenta espaços vazios adjacentes. Nesse caso, a(s)
+  pedra(s) é(são) retirada(s) do tabuleiro. É permitido sacrificar pedras
+  apenas se isso resultar na captura imediata de pelo menos uma pedra inimiga.
+
+* Regra Ko: A regra Ko proíbe a repetição exata de uma posição anterior do
+  tabuleiro, evitando ciclos infinitos de captura. Quando uma repetição
+  exata ocorre, é ilegal fazer o mesmo movimento na próxima jogada,
+  mantendo o jogo dinâmico e evitando situações estagnadas.
+
+* Condições de Fim de Jogo: O jogo termina quando ambos os jogadores decidem
+  passar a vez, quando um jogador desiste ou quando não há mais lugares no
+  tabuleiro para colocar pedras.
+
+
+* Contagem de território (pontuação final):
+
+    ** Regra Japonesa: O território é composto por interseções vazias cercadas
+    por --pedras vivas-- de um jogador. A pontuação é calculada contando as
+    interseções vazias, subtraindo as pedras capturadas do jogador. O jogador
+    com a maior pontuação de território vence.
+
+    ** Regra Chinesa: Similar à regra japonesa, o território é composto por
+    interseções vazias cercadas por pedras vivas. No entanto, é também
+    contado o número de pedras vivas de cada jogador, resultando em que a
+    pontuação do jogador A somada à pontuação do jogador B é igual ao
+    tamanho do tabuleiro.
+
+
+    --pedras vivas--: pedras que não estão cercadas em território inimigo.
+
+
+
