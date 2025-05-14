@@ -57,35 +57,66 @@ class GoBoard(tk.Tk):
 
     # Método para remover as pedras capturadas
     def remove_captured_stones(self, i, j):
-        # Define o oponente com base no jogador atual
         opponent = 'white' if self.current_player == 'black' else 'black'
-        # Verifica as posições adjacentes à nova pedra
+
         for x, y in [(i-1, j), (i+1, j), (i, j-1), (i, j+1)]:
-            # Verifica se as posições estão dentro do tabuleiro e se há pedras do oponente
             if 0 <= x < self.size and 0 <= y < self.size and self.stones[x][y] == opponent:
-                # Se o grupo de pedras do oponente está capturado, remove-o
-                if self.is_captured(x, y):
-                    self.canvas.delete(f"stone_{x}_{y}")  # Remove a pedra do canvas
-                    self.stones[x][y] = ''  # Marca a posição como vazia na matriz
+                grupo = self.get_group(x, y)
+                if self.is_group_captured(grupo):
+                    for gx, gy in grupo:
+                        self.canvas.delete(f"stone_{gx}_{gy}")
+                        self.stones[gx][gy] = ''
+    def get_group(self, i, j):
+        color = self.stones[i][j]
+        visited = set()
+        stack = [(i, j)]
+
+        while stack:
+            x, y = stack.pop()
+            if (x, y) in visited:
+                continue
+            visited.add((x, y))
+
+            for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < self.size and 0 <= ny < self.size:
+                    if self.stones[nx][ny] == color and (nx, ny) not in visited:
+                        stack.append((nx, ny))
+
+        return visited
+    def is_group_captured(self, group):
+        for x, y in group:
+            for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < self.size and 0 <= ny < self.size:
+                    if self.stones[nx][ny] == '':
+                        return False  # Liberdade encontrada
+        return True  # Nenhuma liberdade encontrada
+
+
 
     # Método que verifica se um grupo de pedras está cercado (capturado)
     def is_captured(self, i, j):
         stone_color = self.stones[i][j]  # Cor da pedra no grupo que está sendo verificado
         visited = set()  # Conjunto para rastrear as posições já verificadas
-        stack = [(i, j)]  # Pilha para realizar a busca (algoritmo DFS)
+        stack = [(i, j)]  # Pilha para realizar a busca (DFS)
+
         while stack:
-            i, j = stack.pop()  # Remove o próximo elemento da pilha
-            if (i, j) in visited:
-                continue  # Se a posição já foi visitada, passa para a próxima
-            visited.add((i, j))  # Marca a posição como visitada
-            # Verifica as quatro direções (cima, baixo, esquerda, direita)
-            for x, y in [(i-1, j), (i+1, j), (i, j-1), (i, j+1)]:
-                if 0 <= x < self.size and 0 <= y < self.size:  # Verifica se a posição está dentro do tabuleiro
-                    if self.stones[x][y] == stone_color:
-                        stack.append((x, y))  # Adiciona as pedras do mesmo grupo à pilha
-                    elif self.stones[x][y] == '':  # Se há uma posição vazia ao redor, o grupo não está capturado
-                        return False
-        return True  # Se não há posições vazias ao redor, o grupo está cercado
+            x, y = stack.pop()
+            if (x, y) in visited:
+                continue
+            visited.add((x, y))
+
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < self.size and 0 <= ny < self.size:
+                    if self.stones[nx][ny] == '':
+                        return False  # O grupo tem liberdade, não está capturado
+                    if self.stones[nx][ny] == stone_color and (nx, ny) not in visited:
+                        stack.append((nx, ny))
+
+        return True  # Nenhuma liberdade encontrada: grupo capturado
+
 
 # Função principal do jogo
 def main():
