@@ -1,6 +1,7 @@
 import tkinter as tk
 from bot import Bot
 
+
 # Classe GoBoard herda de tk.Tk, que representa a janela principal do jogo
 class GoBoard(tk.Tk):
 
@@ -11,10 +12,12 @@ class GoBoard(tk.Tk):
         self.title("Go Game")  # Define o título da janela
 
         # Cria um canvas para desenhar o tabuleiro e define a sua cor de fundo
-        self.canvas = tk.Canvas(self, width=50*size, height=50*size, bg="orange")
+        self.canvas = tk.Canvas(self, width=50 * size, height=50 * size, bg="orange")
         self.canvas.pack()  # Coloca o canvas na janela
         self.draw_board()  # Chama a função para desenhar o tabuleiro
         self.current_player = 'black'  # Inicializa o jogador atual como 'preto'
+
+        self.bot = Bot(size)
 
         # Associa o clique do botão esquerdo do mouse à função place_stone
         self.canvas.bind("<Button-1>", self.place_stone)
@@ -22,7 +25,7 @@ class GoBoard(tk.Tk):
     # Método que desenha o tabuleiro de Go
     def draw_board(self):
         # Inicializa a matriz de pedras vazia (cada posição representa um espaço no tabuleiro)
-        self.stones = [['']*self.size for _ in range(self.size)]
+        self.stones = [[''] * self.size for _ in range(self.size)]
         # Desenha as linhas horizontais e verticais do tabuleiro
         for i in range(self.size):
             # Linha horizontal
@@ -48,6 +51,9 @@ class GoBoard(tk.Tk):
             # Alterna para o próximo jogador ('preto' -> 'branco' ou 'branco' -> 'preto')
             self.current_player = 'white' if self.current_player == 'black' else 'black'
 
+            if self.current_player == 'white':
+                self.after(300, self.bot_move)  # Delay para a jogada do bot
+
     # Método que desenha uma pedra no tabuleiro
     def draw_stone(self, i, j, color):
         # Calcula as coordenadas do centro da célula onde a pedra será desenhada
@@ -60,7 +66,7 @@ class GoBoard(tk.Tk):
     def remove_captured_stones(self, i, j):
         opponent = 'white' if self.current_player == 'black' else 'black'
 
-        for x, y in [(i-1, j), (i+1, j), (i, j-1), (i, j+1)]:
+        for x, y in [(i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)]:
             if 0 <= x < self.size and 0 <= y < self.size and self.stones[x][y] == opponent:
                 grupo = self.get_group(x, y)
                 if self.is_group_captured(grupo):
@@ -68,7 +74,6 @@ class GoBoard(tk.Tk):
                         self.canvas.delete(f"stone_{gx}_{gy}")
                         self.stones[gx][gy] = ''
 
-    
     def get_group(self, i, j):
         color = self.stones[i][j]
         visited = set()
@@ -80,7 +85,7 @@ class GoBoard(tk.Tk):
                 continue
             visited.add((x, y))
 
-            for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
                 nx, ny = x + dx, y + dy
                 if 0 <= nx < self.size and 0 <= ny < self.size:
                     if self.stones[nx][ny] == color and (nx, ny) not in visited:
@@ -88,16 +93,14 @@ class GoBoard(tk.Tk):
 
         return visited
 
-    
     def is_group_captured(self, group):
         for x, y in group:
-            for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
                 nx, ny = x + dx, y + dy
                 if 0 <= nx < self.size and 0 <= ny < self.size:
                     if self.stones[nx][ny] == '':
                         return False  # Liberdade encontrada
         return True  # Nenhuma liberdade encontrada
-
 
     # Método que verifica se um grupo de pedras está cercado (capturado)
     def is_captured(self, i, j):
@@ -121,8 +124,7 @@ class GoBoard(tk.Tk):
 
         return True  # Nenhuma liberdade encontrada: grupo capturado
 
-    
-    # Método que faz a jogada do bot 
+    # Método que faz a jogada do bot
     def bot_move(self):
         i, j = self.bot.escolher_jogada(self.stones, 'white')
         if i is not None and j is not None:
@@ -137,6 +139,7 @@ def main():
     size = 13  # Define o tamanho do tabuleiro
     app = GoBoard(size)  # Cria uma instância do tabuleiro de Go
     app.mainloop()  # Inicia o loop principal da interface gráfica
+
 
 if __name__ == "__main__":
     main()
