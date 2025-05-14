@@ -1,4 +1,5 @@
 import tkinter as tk
+from bot import Bot
 
 # Classe GoBoard herda de tk.Tk, que representa a janela principal do jogo
 class GoBoard(tk.Tk):
@@ -66,6 +67,8 @@ class GoBoard(tk.Tk):
                     for gx, gy in grupo:
                         self.canvas.delete(f"stone_{gx}_{gy}")
                         self.stones[gx][gy] = ''
+
+    
     def get_group(self, i, j):
         color = self.stones[i][j]
         visited = set()
@@ -84,6 +87,8 @@ class GoBoard(tk.Tk):
                         stack.append((nx, ny))
 
         return visited
+
+    
     def is_group_captured(self, group):
         for x, y in group:
             for dx, dy in [(-1,0), (1,0), (0,-1), (0,1)]:
@@ -92,7 +97,6 @@ class GoBoard(tk.Tk):
                     if self.stones[nx][ny] == '':
                         return False  # Liberdade encontrada
         return True  # Nenhuma liberdade encontrada
-
 
 
     # Método que verifica se um grupo de pedras está cercado (capturado)
@@ -117,13 +121,22 @@ class GoBoard(tk.Tk):
 
         return True  # Nenhuma liberdade encontrada: grupo capturado
 
+    
+    # Método que faz a jogada do bot 
+    def bot_move(self):
+        i, j = self.bot.escolher_jogada(self.stones, 'white')
+        if i is not None and j is not None:
+            self.stones[i][j] = 'white'
+            self.draw_stone(i, j, 'white')
+            self.remove_captured_stones(i, j)
+            self.current_player = 'black'
+
 
 # Função principal do jogo
 def main():
-    size = 13  # Define o tamanho do tabuleiro (13x13)
+    size = 13  # Define o tamanho do tabuleiro
     app = GoBoard(size)  # Cria uma instância do tabuleiro de Go
     app.mainloop()  # Inicia o loop principal da interface gráfica
 
-# Executa o jogo se o script for rodado diretamente
 if __name__ == "__main__":
     main()
