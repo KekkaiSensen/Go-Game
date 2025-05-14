@@ -1,4 +1,3 @@
-# GO-game
 <h1>Go: The Board Game</h1>
 
 <p>
