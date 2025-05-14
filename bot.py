@@ -1,7 +1,7 @@
 import copy
 
 class Bot:
-    def __init__(self, size, profundidade_max=2):
+    def __init__(self, size, profundidade_max=2): # Quanto maior a profundidade, maior a dificuldade do bot
         self.size = size
         self.profundidade_max = profundidade_max
 
