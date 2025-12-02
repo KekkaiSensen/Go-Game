@@ -4,7 +4,9 @@ Um jogo de Go implementado em Python utilizando Tkinter e Pygame.
 
 # O que é ?
 
-O Go é um jogo de tabuleiro milenar, criado na China, focado em estratégia e controle territorial. Dois jogadores colocam pedras pretas e brancas buscando cercar áreas e capturar grupos inimigos. Para entender as regras completas do jogo, consulte o arquivo [Regras do Go](Regras.md).
+O Go é um jogo de tabuleiro milenar, criado na China, focado em estratégia e controle territorial. Dois jogadores colocam
+pedras pretas e brancas buscando cercar áreas e capturar grupos inimigos. Para entender as regras completas do jogo,
+consulte [Regras do Go](Regras.md).
 
 ## Funcionalidades
 
